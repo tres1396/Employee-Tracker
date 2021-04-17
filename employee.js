@@ -35,14 +35,14 @@ const start = function () {
           "Add Departments",
           "Add A Role",
           "Update Employee Role",
-          "Exit"
+          "Exit",
         ],
       },
-      // runs a function based on the answer the user chooses
     ])
+    // runs a function based on the answer the user chooses
     .then((answers) => {
       if (answers.start === "View All Employees") {
-        viewAllEmployees(); // FIXME create this fxn
+        viewAllEmployees();
       } else if (answers.start === "View All Employees By Department") {
         viewByDepartment(); // FIXME create this fxn
       } else if (answers.start === "View All Employees By Role") {
@@ -62,8 +62,8 @@ const start = function () {
 };
 
 // function to view all employees
-const viewAllEmployees = function() {
-  connection.query (
+const viewAllEmployees = function () {
+  connection.query(
     "SELECT employee.id, first_name, last_name, title, salary, name, manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id",
     (err, results) => {
       if (err) throw err;
@@ -75,7 +75,7 @@ const viewAllEmployees = function() {
 };
 
 // function to view all employees by deparment
-const viewAllDepartments = function() {
+const viewByDepartment = function () {
   connection.query(
     "SELECT id, NAME AS department FROM department",
     (err, results) => {
@@ -87,3 +87,15 @@ const viewAllDepartments = function() {
   );
 };
 
+// function to view all employees by role
+const viewByRole = function () {
+  connection.query(
+    "SELECT role.id, title AS role, salary, NAME AS department FROM role JOIN department ON role.department_id = department.id ORDER BY title",
+    (err, results) => {
+      if (err) throw err;
+      console.table(results);
+      // Prompt the user for their next selection
+      start();
+    }
+  );
+};
