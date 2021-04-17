@@ -61,3 +61,7 @@ const start = function () {
     });
 };
 
+// function to view all employees
+const viewAll = function() {
+  
+}
