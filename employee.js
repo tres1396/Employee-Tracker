@@ -62,6 +62,28 @@ const start = function () {
 };
 
 // function to view all employees
-const viewAll = function() {
-  
-}
+const viewAllEmployees = function() {
+  connection.query (
+    "SELECT employee.id, first_name, last_name, title, salary, name, manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id",
+    (err, results) => {
+      if (err) throw err;
+      console.table(results);
+      // Prompt the user for their next selection
+      start();
+    }
+  );
+};
+
+// function to view all employees by deparment
+const viewAllDepartments = function() {
+  connection.query(
+    "SELECT id, NAME AS department FROM department",
+    (err, results) => {
+      if (err) throw err;
+      console.table(results);
+      // Prompt the user for their next selection
+      start();
+    }
+  );
+};
+
