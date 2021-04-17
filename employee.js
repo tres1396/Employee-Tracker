@@ -21,18 +21,43 @@ const connection = mysql.createConnection({
 // function to start the program
 const start = function () {
   console.log("What would you like to do?");
-  inquirer.prompt ([
-    {
-      type: "list",
-      name: "startList",
-      choices: [
-        "View All Employees",
-        "View All Employees By Department",
-        "View All Employees By Role",
-        "Add Employees",
-        "Add Departments",
-        "Add A Role"
-      ]
-    }
-  ])
+  inquirer
+    .prompt([
+      {
+        // List of options for user to choose in command line
+        type: "list",
+        name: "startList",
+        choices: [
+          "View All Employees",
+          "View All Employees By Department",
+          "View All Employees By Role",
+          "Add Employees",
+          "Add Departments",
+          "Add A Role",
+          "Update Employee Role",
+          "Exit"
+        ],
+      },
+      // runs a function based on the answer the user chooses
+    ])
+    .then((answers) => {
+      if (answers.start === "View All Employees") {
+        viewAllEmployees(); // FIXME create this fxn
+      } else if (answers.start === "View All Employees By Department") {
+        viewByDepartment(); // FIXME create this fxn
+      } else if (answers.start === "View All Employees By Role") {
+        viewByRole(); // FIXME create this fxn
+      } else if (answers.start === "Add Employees") {
+        addEmployees(); // FIXME create this fxn
+      } else if (answers.start === "Add Departments") {
+        addDepartments(); // FIXME create this fxn
+      } else if (answers.start === "Add A Role") {
+        addRole(); // FIXME create this fxn
+      } else if (answers.start === "Update Employee Role") {
+        updateRole(); // FIXME create this fxn
+      } else {
+        connection.end();
+      }
+    });
 };
+
