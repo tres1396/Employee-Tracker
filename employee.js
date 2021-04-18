@@ -6,14 +6,8 @@ const express = require("express");
 // creating the connection
 const connection = mysql.createConnection({
   host: "localhost",
-
-  // Your port; if not 3306
   port: 3306,
-
-  // Your username
   user: "root",
-
-  //
   password: "test123",
   database: "employee_programDB",
 });
@@ -40,21 +34,21 @@ const start = function () {
       },
     ])
     // runs a function based on the answer the user chooses
-    .then((answers) => {
-      if (answers.start === "View All Employees") {
+    .then((answer) => {
+      if (answer.startList === "View All Employees") {
         viewAllEmployees();
-      } else if (answers.start === "View All Employees By Department") {
-        viewByDepartment(); // FIXME create this fxn
-      } else if (answers.start === "View All Employees By Role") {
-        viewByRole(); // FIXME create this fxn
-      } else if (answers.start === "Add Employees") {
-        addEmployees(); // FIXME create this fxn
-      } else if (answers.start === "Add Departments") {
-        addDepartments(); // FIXME create this fxn
-      } else if (answers.start === "Add A Role") {
-        addRole(); // FIXME create this fxn
-      } else if (answers.start === "Update Employee Role") {
-        updateRole(); // FIXME create this fxn
+      } else if (answer.startList === "View All Employees By Department") {
+        viewByDepartment(); 
+      } else if (answer.startList === "View All Employees By Role") {
+        viewByRole(); 
+      } else if (answer.startList === "Add Employees") {
+        addEmployees(); 
+      } else if (answer.startList === "Add Departments") {
+        addDepartments(); 
+      } else if (answer.startList === "Add A Role") {
+        addRole();  
+      } else if (answer.startList === "Update Employee Role") {
+        updateRole(); 
       } else {
         connection.end();
       }
@@ -62,7 +56,7 @@ const start = function () {
 };
 
 // function to view all employees
-const viewAllEmployees = function () {
+const viewAllEmployees = function() {
   connection.query(
     "SELECT employee.id, first_name, last_name, title, salary, name, manager_id FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id",
     (err, results) => {
@@ -75,7 +69,7 @@ const viewAllEmployees = function () {
 };
 
 // function to view all employees by deparment
-const viewByDepartment = function () {
+const viewByDepartment = function() {
   connection.query(
     "SELECT id, NAME AS department FROM department",
     (err, results) => {
@@ -88,7 +82,7 @@ const viewByDepartment = function () {
 };
 
 // function to view all employees by role
-const viewByRole = function () {
+const viewByRole = function() {
   connection.query(
     "SELECT role.id, title AS role, salary, NAME AS department FROM role JOIN department ON role.department_id = department.id ORDER BY title",
     (err, results) => {
@@ -101,7 +95,7 @@ const viewByRole = function () {
 };
 
 // function to add employee
-const addEmployees = function () {
+const addEmployees = function() {
   connection.query("SELECT * FROM role", (err, roles) => {
     if (err) console.log(err);
     roles = roles.map((role) => {
@@ -150,7 +144,7 @@ const addEmployees = function () {
 };
 
 // function to add department
-const addDepartments = function () {
+const addDepartments = function() {
   inquirer
     .prompt([
       {
@@ -175,7 +169,7 @@ const addDepartments = function () {
 };
 
 // function to add roles
-const addRole = function () {
+const addRole = function() {
   connection.query("SELECT * FROM department", (err, departments) => {
     if (err) console.log(err);
     departments = departments.map((department) => {
@@ -223,7 +217,7 @@ const addRole = function () {
 
 // function to update employee roles
 
-const updateEmployeeRole = function () {
+const updateEmployeeRole = function() {
   connection.query("SELECT * FROM employee", (err, employees) => {
     if (err) console.log(err);
     employees = employees.map((employee) => {
@@ -263,7 +257,7 @@ const updateEmployeeRole = function () {
           {
             role_id: data.chooseNewRole,
           },
-          {
+          { 
             id: data.chooseEmployee,
           },
           function (err) {
