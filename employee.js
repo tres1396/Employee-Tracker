@@ -175,7 +175,7 @@ const addDepartments = function () {
 };
 
 // function to add roles
-const addRole = function() {
+const addRole = function () {
   connection.query("SELECT * FROM department", (err, departments) => {
     if (err) console.log(err);
     departments = departments.map((department) => {
@@ -185,39 +185,87 @@ const addRole = function() {
       };
     });
     inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "newRole",
-        message: "What is the name of the this new role?"
-      },
-      {
-        type: "input",
-        name: "salary",
-        message: "What is the salary for this role?"
-      },
-      {
-        type: "list",
-        name: "departmentId",
-        message: "What department does this role belong to?",
-        choices: departments,
-      },
-    ])
-    .then((data) => {
-      connection.query(
-        "INSERT INTO role SET ?", 
+      .prompt([
         {
-          title: data.newRole,
+          type: "input",
+          name: "newRole",
+          message: "What is the name of the this new role?",
+        },
+        {
+          type: "input",
+          name: "salary",
+          message: "What is the salary for this role?",
+        },
+        {
+          type: "list",
+          name: "departmentId",
+          message: "What department does this role belong to?",
+          choices: departments,
+        },
+      ])
+      .then((data) => {
+        connection.query(
+          "INSERT INTO role SET ?",
+          {
+            title: data.newRole,
             salary: data.newSalary,
             department_id: data.departmentId,
-        },
-        function (err) {
-          if (err) throw err;
-        }
-      );
-      console.log("Updated Roles Table:");
+          },
+          function (err) {
+            if (err) throw err;
+          }
+        );
+        console.log("Updated Roles Table:");
         viewByRole();
-    }
-    )
-  }
-}
+      });
+  });
+};
+
+// function to update employee roles
+
+const updateEmployeeRole = function() {
+  connection.query("SELECT * FROM employee", (err, employees) => {
+    if (err) console.log(err);
+    employees = employees.map((employee) => {
+      return {
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id,
+      };
+    });
+
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "chooseEmployee",
+          message: "Which employee would you like to update?",
+          choices: employees,
+        },
+      ])
+      .then((data) => {
+        connection.query(
+          "UPDATE employee SET ? WHERE ?",
+          {
+            role_id: data.chooseEmployee,
+          },
+          {
+            id: data.employees,
+          },
+          function (err) {
+            if (err) throw err;
+          }
+        );
+        console.log("Updated Employee List:");
+        viewAll();
+      });
+  });
+};
+
+
+// Connects to the server
+connection.connect((err) => {
+  if (err) throw err;
+  // Run the start function after the connection successful
+  start();
+});
+
