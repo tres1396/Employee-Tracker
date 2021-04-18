@@ -223,7 +223,7 @@ const addRole = function () {
 
 // function to update employee roles
 
-const updateEmployeeRole = function() {
+const updateEmployeeRole = function () {
   connection.query("SELECT * FROM employee", (err, employees) => {
     if (err) console.log(err);
     employees = employees.map((employee) => {
@@ -231,6 +231,15 @@ const updateEmployeeRole = function() {
         name: `${employee.first_name} ${employee.last_name}`,
         value: employee.id,
       };
+    });
+    connection.query("SELECT * FROM role", (err, roles) => {
+      if (err) console.log(err);
+      roles = roles.map((role) => {
+        return {
+          name: role.title,
+          value: role.id,
+        };
+      });
     });
 
     inquirer
@@ -241,26 +250,31 @@ const updateEmployeeRole = function() {
           message: "Which employee would you like to update?",
           choices: employees,
         },
+        {
+          type: "list",
+          name: "chooseEmployee",
+          message: "Choose a role for this employee.",
+          choices: roles,
+        }
       ])
       .then((data) => {
         connection.query(
           "UPDATE employee SET ? WHERE ?",
           {
-            role_id: data.chooseEmployee,
+            role_id: data.chooseNewRole,
           },
           {
-            id: data.employees,
+            id: data.chooseEmployee,
           },
           function (err) {
             if (err) throw err;
           }
         );
         console.log("Updated Employee List:");
-        viewAll();
+        viewAllEmployees();
       });
   });
 };
-
 
 // Connects to the server
 connection.connect((err) => {
@@ -268,4 +282,3 @@ connection.connect((err) => {
   // Run the start function after the connection successful
   start();
 });
-
