@@ -9,7 +9,7 @@ VALUES
 ("James", "Bond", 1),
 ("Dua", "Lipa", 1),
 ("Wendy", "Williams", 1),
-("Monica", "Lewinsky", 1),
+("Monica", "Lewinsky", 1);
 
 INSERT INTO role (title, salary, department_id)
 VALUES ("Sales Lead", 100000, 1), ("Salesperson", 80000, 1),
