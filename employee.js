@@ -99,3 +99,77 @@ const viewByRole = function () {
     }
   );
 };
+
+// function to add employee
+const addEmployees = function () {
+  connection.query("SELECT * FROM role", (err, roles) => {
+    if (err) console.log(err);
+    roles = roles.map((role) => {
+      return {
+        name: role.title,
+        value: role.id,
+      };
+    });
+  });
+  // prompts to input employee information
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "firstName",
+        message: "What is the employee's first name?",
+      },
+      {
+        type: "input",
+        name: "lastName",
+        message: "What is the employee's last name?",
+      },
+      {
+        type: "list",
+        name: "role",
+        message: "What is the employee's role?",
+        choices: "roles",
+      },
+    ])
+    .then((data) => {
+      console.log(data.role);
+      connection.query(
+        "INSERT INTO employee SET ?",
+        {
+          first_name: data.firstName,
+          last_name: data.lastName,
+          role_id: data.role,
+        },
+        (err) => {
+          if (err) throw err;
+          console.log("Updated Employee List:");
+          viewAllEmployees();
+        }
+      );
+    });
+};
+
+// function to add department
+const addDepartments = function () {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "newDepartment",
+        message: "What is the new department called?",
+      },
+    ])
+    .then((data) => {
+      connection.query(
+        "INSERT INTO department SET ?",
+        {
+          name: data.newDepartment,
+        },
+        function (err) {
+          if (err) throw err;
+        }
+      );
+      console.log("Updated Departments Table:");
+      viewAllDep();
+    });
+};
