@@ -128,7 +128,7 @@ const addEmployees = function () {
         type: "list",
         name: "role",
         message: "What is the employee's role?",
-        choices: "roles",
+        choices: roles,
       },
     ])
     .then((data) => {
@@ -169,7 +169,55 @@ const addDepartments = function () {
           if (err) throw err;
         }
       );
-      console.log("Updated Departments Table:");
-      viewAllDep();
+      console.log("Updated Departments:");
+      viewByDepartment();
     });
 };
+
+// function to add roles
+const addRole = function() {
+  connection.query("SELECT * FROM department", (err, departments) => {
+    if (err) console.log(err);
+    departments = departments.map((department) => {
+      return {
+        name: department.name,
+        value: department.id,
+      };
+    });
+    inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "newRole",
+        message: "What is the name of the this new role?"
+      },
+      {
+        type: "input",
+        name: "salary",
+        message: "What is the salary for this role?"
+      },
+      {
+        type: "list",
+        name: "departmentId",
+        message: "What department does this role belong to?",
+        choices: departments,
+      },
+    ])
+    .then((data) => {
+      connection.query(
+        "INSERT INTO role SET ?", 
+        {
+          title: data.newRole,
+            salary: data.newSalary,
+            department_id: data.departmentId,
+        },
+        function (err) {
+          if (err) throw err;
+        }
+      );
+      console.log("Updated Roles Table:");
+        viewByRole();
+    }
+    )
+  }
+}
